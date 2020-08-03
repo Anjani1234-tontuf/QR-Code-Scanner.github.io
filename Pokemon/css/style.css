@@ -1,0 +1,46 @@
+@font-face {
+    font-family: 'Gang of Three';
+    src: url(../fonts/go3v2.ttf) format('truetype');
+}
+
+body {
+    text-align: center;
+    font-family: 'Gang of Three', sans-serif;
+}
+
+h1, h2 {
+    font-weight: normal;
+    margin: 40px 0;
+}
+
+ul {
+    list-style-type: none;
+}
+
+ul li {
+    display: inline-block;
+    margin: 5px 10px;
+}
+
+#image {
+    border: 1px solid gray;
+    padding: 25px 33px;
+    border-radius: 5px;
+}
+
+#btStart {
+    display: block;
+    margin: 30px auto;
+    background-color: #00A0ED;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: .1s;
+    font-size: 17px;
+}
+
+#btStart:hover {
+    background-color: rgb(0, 117, 172);
+}

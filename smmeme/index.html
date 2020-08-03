@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+	<head>
+		 <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">
+
+ 
+          
+	 <style>
+		 #canvasid{
+			 
+		 } 
+			 
+			
+	 </style>	
+	</head>
+	
+    <body>
+	<div class= "container">
+		<div  class="row">
+	  	  <h1>Meme Generator</h1>
+		</div>	
+		<div  class="row">
+		  <div  class="col s6">	
+			  Top Line:<br>
+			  <input id="top-line" type="text">	
+			  Bottom Line:<br>
+			   <input id="bottom-line" type="text">	
+	      </div>
+			
+		<div class="col s6">	
+			<canvas id="canvasid" width="400" height="375"></canvas>	
+		</div>
+		  
+	    </div>
+		
+    </div>	
+	 
+	
+	 <!-- Compiled and minified JavaScript -->
+  <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>		
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>	
+	 <script>
+		
+		  var img = new Image();
+		  img.src = "surprised_monkey.jpg";
+		  img.onload = drawImage;
+		 
+		  var ctx = document.getElementById("canvasid").getContext("2d");
+		  ctx.font ="36px Comic Sans MS";
+		  ctx.fillStyle = "#FFFFFF";
+		  ctx.textAlign = "center";
+		   
+		  function drawImage(){
+			  ctx.drawImage(img,0,0,400,375) ;	
+		  }
+		 
+		 function  redrawMeme(){
+			  drawImage();
+			 var text = input1.value;
+			 var text2 = input2.value;
+			 
+			  ctx.fillText(text,250,50 );
+			  ctx.fillText(text2,350,350 );
+		 }
+		 
+		  
+		  var input1 = document.getElementById("top-line") ;
+	
+		  var input2 = document.getElementById("bottom-line");
+		
+		 input1.focus();
+		 input1.onkeypress = redrawMeme;
+		 input1.onchange = redrawMeme;
+	     input2.onkeypress = redrawMeme;		 
+		 input2.onchange   = redrawMeme;
+		 
+		  
+		   
+		   
+		  
+	 </script>
+	</body>
+</html>

@@ -1,0 +1,91 @@
+<head>
+	<script>
+		var channel = "";
+		var filter = "";
+		
+		function loadGData(channel, index) {
+			var url = "https://gdata.youtube.com/feeds/api/users/"+channel+"/playlists?v=2&start-index="+index+"&max-results=50&alt=json";
+			var xmlhttp;
+			if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+				xmlhttp=new XMLHttpRequest();
+			}
+			else {// code for IE6, IE5
+				xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			/*
+			xmlhttp.onreadystatechange=function() {
+				if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+					var response = xmlhttp.responseText;
+				}
+			}
+			*/
+			xmlhttp.open("GET",url,false);
+			xmlhttp.send(null);
+			
+			if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+				return xmlhttp.responseText;
+			}
+			return "";
+		}
+		
+		//https://gdata.youtube.com/feeds/api/users/UCBerkeley/playlists?v=2&start-index=1&max-results=50&alt=json
+		function loadAll() {
+			var counter = 1;
+			var out = "";
+			
+			channel = document.getElementById("channel").value;
+			filter = document.getElementById("filter").value;
+			
+			document.getElementById("content").value="";
+			
+			while (true) {
+				var response = loadGData(channel,counter);
+				var processedData = process(response,filter);
+				if (processedData == null) break;
+				out += processedData;
+				counter += 50;				
+			}
+			document.getElementById("content").value=out;		
+		}
+		
+		function process(data,filter) {
+			//var response = loadGData("UCBerkeley",1);
+			//console.log(response);
+			
+			try {
+				var ee = JSON.parse(data);
+				var out = "";
+				if (typeof ee.feed.entry == 'undefined' || ee.feed.entry.length <= 0) return null;
+				for (var i=0; i<ee.feed.entry.length; i++) {
+					var title = ee.feed.entry[i].title.$t;
+					//console.log(title);
+					if (filter != "" && title.toLowerCase().indexOf(filter.toLowerCase()) < 0) continue;
+					var url = "https://www.youtube.com/playlist?list="+ee.feed.entry[i].yt$playlistId.$t;
+					out += channel+"\t"+title+"\t"+ee.feed.entry[i].yt$countHint.$t+"\t"+url+"\n"; 	
+				}
+				return out;
+			}
+			catch (e) {
+				return "";
+			}
+		}
+	</script>
+
+</head>
+<body>	
+	Channel: <input id="channel" type="text" value=""></input>
+	<br/>
+	Filter: <input id="filter" type="text" value=""></input>
+	<br/>
+	<!--
+	<textarea rows="10" cols="100" id="source"></textarea>
+	<br/>
+	-->
+	<input id="process" type="button" onclick="loadAll()" value="Process"></input>
+	<br/>
+	<br/>
+	<br/>
+	<textarea rows="50" cols="200" id="content"></textarea>
+	
+</body>
+

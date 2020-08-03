@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%;">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Text</title>
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="example">
+  <p class="example__text" id="target" contenteditable="true">This is an example text. You may change it, if you want to!</p>
+  <script>
+    function updateCSS (evt) {
+      document.getElementById("target").style.fontSize = evt.data;
+    }
+
+    if (window.addEventListener) {
+      window.addEventListener("message", updateCSS, false);
+    }
+    else {
+      dow.attachEvent("onmessage", updateCSS);
+    }
+  </script>
+</body>
+</html>

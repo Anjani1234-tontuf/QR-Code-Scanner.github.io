@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Fortnite Random Location Generator</title>
+    
+    <!--Meta Tags-->
+    <meta name="description" content="Picks a random city from the map, alongside miscellaneous buttons like random square picker.">
+      <meta name="author" content="AlexHGaming">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name = "keywords" content = "Fortnite, Random Location, Fortnite Random Location Generator, fortnite random location generator, Fortnite Battle Royale, Fortnite Location Picker, Fortnite Random Location Picker" />
+<meta charset="utf-8">
+<!-- End of Meta Tags -->  
+
+<link rel="icon" href="https://i.imgur.com/IMjozOI.jpg">
+  </head>
+
+  <body>
+<!-- Page Header centered -->
+      <center><h1 style="font-size:50px"><img src="https://i.imgur.com/IMjozOI.jpg" alt="Image" width="84" height="84">Random Location Picker<img src="https://i.imgur.com/IMjozOI.jpg" alt="Image" width="84" height="84">
+      </h1></center>
+      <center><h4 id = "vers"></h4></center>
+<!-- End of Page Header -->
+  
+<!-- Local Imports-->    
+  <script src = "../JS/main.js"></script>
+  <script src = "../JS/allcities.js"></script>
+  <script src = "../JS/version.js"></script>
+  <script src = "../JS/grid.js"></script>
+      <script src = "../JS/allgrid.js"></script>
+<!-- End of Local Imports -->
+    
+<!-- External Imports -->
+<link rel="stylesheet" href="https://bootswatch.com/4/darkly/bootstrap.min.css">
+    <!-- End of External Imports -->
+    
+
+  <noscript>Bro, your JavaScript is disabled. I highly recommend you enabling it for the website to work.</noscript><br><br>
+
+<p id = "demo"></p>
+<!-- Main Buttons & Content -->
+<center><button type = "button" onclick = "main()" class = "btn btn-primary btn-lg">Pick a Random Location</button></center><br>
+
+<div class = "container">
+  <center><button type = "button" onclick = "grid()" class = "btn btn-warning btn-lg">Pick a Random Square on the map</button></center>
+  <center><font color = "#ff0000;">- regenerate it if it's not accurate!</center><br></font>
+  <h1 id = "mout" style = "font-size:60px"></h1></center> <!-- Generate Random Location Button & Grid Output -->
+  <button type = "button" onclick = "allcities()" class = "btn btn-success btn-lg">View all Locations</button><br><br>
+    <button type = "button" onclick = "allgrid()" class = "btn btn-primary btn-lg">View all Squares that are available</button><br>
+<p id = "op" style="font-size:20px; color:mediumblue"></p><br><br> <!-- All cities output -->
+<!-- End of Main Buttons & Content -->            
+<!-- Miscellaneous -->
+<hr style="background-color:red"><br>
+<h2>Miscellaneous</h2><br>
+<button type = "button" class = "btn btn-secondary btn-lg" onclick = "window.location.href = ('./changelog.html')">Changelog</button>
+<!-- End of Miscellaneous -->
+
+<hr style="background-color:red"><br>
+<h3><a href = "https://github.com/AlexHGaming/Fortnite-Random-Location-Picker/">View code on GitHub</a> - Made with &hearts;</h3><br>
+
+Want to make suggestions to the site? Sure! You can put these suggestions on the <a href = "https://github.com/AlexHGaming/Fortnite-Random-Place-Generator/">GitHub repo</a>'s issues section, and I will surely respond! Want to report an issue? Go to the issues section and report it there, it isn't there for nothing!<br><br>
+</hr>
+
+          </div>
+  </body>
+<!-- End of Document -->
+</html>

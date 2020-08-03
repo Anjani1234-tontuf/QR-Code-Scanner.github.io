@@ -1,0 +1,10 @@
+html, body{
+    height: 100%;
+}
+
+body {
+    background: url('img/cracked.jpg');
+    background-size: cover;
+    background-position: top left;
+    cursor: none;
+}

@@ -1,0 +1,63 @@
+
+
+body {
+	font-family: rockwell;
+	font-weight: bold;
+	background-color:mediumaquamarine;
+}
+
+.chgFont1 {
+	font-size: 5rem;
+	font-weight: bold;
+	text-align: center;
+	color: white;
+}
+
+.marginBottom0 {
+	margin-bottom: 3%;
+}
+
+.chgFont2 {
+	font-size: 3rem;
+	font-weight: bold;
+}
+
+.chgLength1 {
+	width: 60%;
+}
+
+.marginBottom1 {
+	margin-bottom: 1%;
+}
+
+.chgFont4 {
+	font-weight: bold;
+}
+
+.chgLength2 {
+	width: 10%;
+}
+
+.moveRight1 {
+	margin-left: 2.3%;
+}
+
+.chgFont3 {
+	font-weight: bold;
+}
+
+.marginBottom2 {
+	margin-bottom: 2%;
+}
+
+.moveRight2 {
+	margin-left: 50%;
+}
+
+.centerText {
+	text-align: center;
+}
+
+.padding1 {
+	padding: 2% 0% 2% 30%;
+}

@@ -1,0 +1,418 @@
+<head>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<!--
+	<script type="text/javascript" src="./tableExport/jquery.base64.js"></script>
+	<script type="text/javascript" src="./tableExport/html2canvas.js"></script>
+	<script type="text/javascript" src="./tableExport/jspdf/libs/sprintf.js"></script>
+	<script type="text/javascript" src="./tableExport/jspdf/jspdf.js"></script>
+	<script type="text/javascript" src="./tableExport/jspdf/libs/base64.js"></script>
+	<script type="text/javascript" src="./tableExport/tableExport.js"></script>
+	-->
+	<script>
+		var password = "xxxxxxxxxxxx";
+		var channel = "";
+		var filter = "";
+		var counter = 0;
+		
+		//var doc = new jsPDF();
+		
+		function loadData(url) {			
+			var xmlhttp;
+			if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+				xmlhttp=new XMLHttpRequest();
+			}
+			else {// code for IE6, IE5
+				xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			/*
+			xmlhttp.onreadystatechange=function() {
+				if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+					var response = xmlhttp.responseText;
+				}
+			}
+			*/
+			//xmlhttp.timeout = 30000;
+			xmlhttp.open("GET",url,false);
+			try {
+				xmlhttp.send(null);
+			}
+			catch (ex) {}
+			
+			if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+				return xmlhttp.responseText;
+			}
+			return "";
+		}
+		
+		function getWeb(url,callback) {
+			//var response = loadData("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22"+encodeURIComponent(url)+"%22&diagnostics=true&format=json&callback=");
+			//var URL = "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22"+encodeURIComponent(url)+"%22&diagnostics=true";
+			var _URL = url;
+			console.log(_URL);
+			//var response = loadData(_URL);
+			
+			$.ajax({
+				url: _URL,
+				type: "GET",
+				async: false,
+				//crossDomain: true,
+				//dataType: 'json',
+				success: function( data, textStatus, jqXHR ) { 
+					//alert('Success: '+data); 
+					callback(data,textStatus,jqXHR);
+				},
+				error: function(jqXHR, textStatus, errorThrown) { 
+					console.log('Failed!'); 
+				}				
+			});
+			  
+			return "";
+		}
+		
+		//https://gdata.youtube.com/feeds/api/users/UCBerkeley/playlists?v=2&start-index=1&max-results=50&alt=json
+		function buildPage(page) {			
+			var out = "";
+			//var params = "action=get&encoding=&auth=&name=1011788021303444&url=http://www.documaniatv.com/search.php?keywords=pilot%20guides&page=1";
+			//var url = "http://www.documaniatv.com/search.php?keywords=pilot%20guides&page="+page;
+			var response = getWeb(page);
+			//document.getElementById("content").value=response;
+			
+			//var ee = JSON.parse(response);
+			//var ee = eval(response);
+
+			//var html = $.parseHTML(response);
+			//document.getElementById("content").value=html;
+
+			var html = $(response);
+			
+			var title = html.find("h2.entry-title");
+			out+="<br/>";
+			out+="<br/>";
+			if (title.length > 0) {
+				out+=title[0].outerHTML;
+				out+="<br/>";
+			}
+			var content = html.find("div.entry-content");
+			var children = content.children();
+			for (var i=0; i<children.length; i++) {
+				var child = children[i];
+				var classes = child.getAttribute("class");
+				if (classes != null) {
+					if (classes.indexOf("besocial") >= 0) continue;
+					if (classes.indexOf("cc-block") >= 0) continue;
+				}
+				out+=child.outerHTML;
+				/*
+				var child = $(children[i]);
+				if (child.hasClass("besocial")) continue;
+				if (child.hasClass("cc-block")) continue;
+				
+				//out+=child.html();
+				out+=child[0].outerHTML;
+				*/
+			}
+			
+			return out;					
+		}
+		
+		var currentVideo = 0;
+		var searchResults = [];
+		
+		function videoInfoReceived(data) {
+			//$("#content").html(data);	
+			var json = jQuery.parseJSON(data);
+			if (json.results.length <= 0) {
+				currentVideo++;
+				getVideoData();
+				return;
+			}
+			
+			var streamUrl = "";
+			for (var i=0; i<json.results.length; i++) {
+				//if (json.results[i].quality == "MEDIUM" || json.results[i].quality == "SMALL") {
+					streamUrl = json.results[i].href;
+					break;
+				//}
+			}
+			if (streamUrl == "") {
+				currentVideo++;
+				getVideoData();
+				return;
+			}
+			
+			$("#video_element").attr("src","https://"+streamUrl);					
+			
+			//$("#video_element")[0].play();
+			$("#play-pause").click();
+		}
+		
+		function getVideoData() {			
+			if (currentVideo >= searchResults.length) currentVideo=0;
+			if (currentVideo < 0) currentVideo=searchResults.length-1;
+			
+			var videoId = searchResults[currentVideo].href;						
+			var url = "http://javisar.net/mediaparser/mediaparser.php?user="+password+"&action=links&provider=youtube&href="+encodeURIComponent(videoId);
+			getWeb(url,videoInfoReceived);
+		}
+		/*
+		https://www.googleapis.com/youtube/v3/videos?id=DrWpLS0vM0g&key=AIzaSyD9R6hPP9fqwFd0ZtV2JH4cplywhmQhJxk&part=snippet&callback=fcall
+
+		http://gdata.youtube.com/feeds/api/videos/DrWpLS0vM0g?v=2&alt=jsonc
+
+		http://www.youtube.com/oembed?url=http://www.youtube.com/watch?v=ojCkgU5XGdg&format=json
+
+		http://www.youtube.com/get_video_info?&video_id=DrWpLS0vM0g
+
+		http://www.youtube.com/get_video_info?&video_id=DrWpLS0vM0g&el=embedded&ps=default&eurl=&gl=US&hl=en
+		*/
+		function searchReceived(data) {
+			//$("#content").html(data);	
+			var json = jQuery.parseJSON(data);
+			searchResults = json.results;
+			currentVideo = 0;
+			getVideoData();
+		}
+		
+		function loadAll() {
+			
+			var out = "";
+			document.getElementById("content").value="";
+			
+			channel = document.getElementById("channel").value;
+			//filter = document.getElementById("filter").value;
+			
+			if (channel == "") {
+				alert("Must enter a query");
+				return;
+			}
+			/*
+			out += loadLonely(1);
+			out += loadLonely(2);
+			out += loadLonely(3);
+			out += loadLonely(4);
+			
+			document.getElementById("content").value=out+"Total: "+counter;
+			*/		
+
+			//var url = "http://www.youtube.com/get_video_info?&video_id=DrWpLS0vM0g";
+			var url = "http://javisar.net/mediaparser/mediaparser.php?user="+password+"&action=search&provider=youtube&type=all&query="+encodeURIComponent(channel);
+			var response = getWeb(url,searchReceived);
+			//$("#content").html(response);		
+			/*
+			var out = "";
+			var page = $(response);
+			//var page = $.parseHTML(response);
+			var items=page.find("div.entry-content a.liinternal[href]");
+			for (var i=0; i<items.length; i++) {
+				var item = items[i];
+				//out += item.getAttribute("href")+"\n";
+				var link = item.getAttribute("href");
+				out += buildPage(link);
+				//if (i>=5) break;				
+			}
+			
+			//document.getElementById("content").html(out);			
+			$("body").empty();
+			$("body").css("font-size","22px");
+			$("body").html("<div id='content'></div><div id='biblio'></div>");
+			$("#content").html(out);		
+
+			$("#content").find("img[src]").each(function(index) {
+				//try {	
+					$(this).attr("src",unescape($(this).attr("src")));
+				//}
+				//catch (e) {		console.log( index + ": " + $( this ).attr("src") );	}				
+			});
+			
+			*/
+			/*
+			var linkList = [];
+			$("#content").find("a[href]").each(function(index) {
+				$(this).attr("href",unescape($(this).attr("href")));
+				if (!$(this).hasClass("liimagelink")) {
+					linkList.push($(this));
+				}
+			});
+			
+			$("#content > p").each(function(index) {
+				$(this).css("text-align","justify");				
+			});
+			$("#content").find("div[id*='attachment']:has(img[src])").each(function(index) {
+				$(this).css("width","");
+				//$(this).wrap( "<p style='text-align: center;'></p>" );
+				$(this).css("text-align","center");
+			});
+			*/
+			//$("body").html(out);
+			//$("#content").tableExport({type:'pdf',escape:'false'});
+			//doc.addHTML(out);
+			//doc.save('test.pdf');
+			/*
+			for (var i=0; i<linkList.length; i++) {
+				var link = linkList[i];
+				$("#biblio").append($("<br/>"));
+				$("#biblio").append($(link).clone());
+			}
+			*/
+		}
+		
+		function initialize() {
+			// Add events
+			$("#video_element").bind("ended",function(e) {
+				e.stopPropagation();
+				console.log("ended");
+				$("#play-pause").click();
+				$("#video_element").attr("src","");
+				currentVideo++;				
+				getVideoData();
+			});
+			/*
+			$("#video_element").bind("error",function(e) {
+				e.stopPropagation();
+				console.log("error");
+				//$("#play-pause").click();
+				$("#video_element").attr("src","");
+				currentVideo++;				
+				getVideoData();
+			});
+			*/
+			$("#video_element")[0].addEventListener('error', function(e) {
+				e.stopPropagation();
+				console.log("error");
+				//$("#play-pause").click();
+				$("#video_element").attr("src","");
+				currentVideo++;				
+				getVideoData();
+			}, false);
+			
+			$("#play-pause").bind("click", function() {
+				var video = $("#video_element")[0];
+				var playButton = $("#play-pause")[0];
+				
+				if (video.paused == true) {
+					// Play the video
+					video.play();
+
+					// Update the button text to 'Pause'
+					playButton.innerHTML = "Pause";
+				} else {
+					// Pause the video
+					video.pause();
+
+					// Update the button text to 'Play'
+					playButton.innerHTML = "Play";
+				}
+			});
+			$("#mute").bind("click", function() {
+				var video = $("#video_element")[0];
+				var muteButton = $("#mute")[0];
+				
+				if (video.muted == false) {
+					// Mute the video
+					video.muted = true;
+
+					// Update the button text
+					muteButton.innerHTML = "Unmute";
+				  } else {
+						// Unmute the video
+						video.muted = false;
+
+						// Update the button text
+						muteButton.innerHTML = "Mute";
+				  }
+			});
+			$("#full-screen").bind("click", function() {
+				var video = $("#video_element")[0];
+				if (video.requestFullscreen) {
+					video.requestFullscreen();
+				  } else if (video.mozRequestFullScreen) {
+					video.mozRequestFullScreen(); // Firefox
+				  } else if (video.webkitRequestFullscreen) {
+					video.webkitRequestFullscreen(); // Chrome and Safari
+				  }
+			});
+			$("#seek-bar").bind("change", function() {
+				var video = $("#video_element")[0];
+				var seekBar = $("#seek-bar")[0];
+				// Calculate the new time
+				  var time = video.duration * (seekBar.value / 100);
+
+				  // Update the video time
+				  video.currentTime = time;
+			});
+			$("#video_element").bind("timeupdate",function(e) {
+				var video = $("#video_element")[0];
+				var seekBar = $("#seek-bar")[0];
+				// Calculate the slider value
+				  var value = (100 / video.duration) * video.currentTime;
+
+				  // Update the slider value
+				  seekBar.value = value;
+			});
+			$("#seek-bar").bind("bind", function() {
+				var video = $("#video_element")[0];
+				video.pause();
+			});
+			// Play the video when the slider handle is dropped
+			$("#seek-bar").bind("mouseup", function() {
+				var video = $("#video_element")[0];
+				video.play();
+			});			
+			$("#volume-bar").bind("change", function() {
+				var video = $("#video_element")[0];
+				var volumeBar = $("#volume-bar")[0];
+				video.volume = volumeBar.value;
+			});
+			
+			$("#next-video").bind("click", function() {
+				currentVideo++;
+				getVideoData();
+			});
+			$("#prev-video").bind("click", function() {
+				currentVideo--;
+				getVideoData();
+			});
+			
+		}
+	</script>
+
+</head>
+<body onload="initialize();">	
+	Query: <input id="channel" type="text" value=""></input>&nbsp;&nbsp;
+	<!--
+	<br/>
+	
+	Filter: <input id="filter" type="text" value=""></input>
+	<br/>
+	-->
+	<!--
+	<textarea rows="10" cols="100" id="source"></textarea>
+	<br/>
+	-->
+	<input id="process" type="button" onclick="loadAll()" value="Process"></input>
+	<br/>
+	<br/>
+	<br/>
+	<!--<textarea rows="50" cols="160" id="content"></textarea>-->
+	<!--<video id="video_element" width="640" height="480" controls>-->
+	<!-- http://www.w3schools.com/tags/ref_av_dom.asp -->
+	<audio id="video_element" width="640" height="480">
+	  <source src="" type="video/mp4">
+	  <!--<source src="movie.ogg" type="video/ogg">-->
+	Your browser does not support the video tag.
+	</audio>
+	<div id="video-controls" style="width:640px">
+		<button type="button" id="prev-video"><<</button>
+		<button type="button" id="play-pause">Play</button>
+		<input type="range" id="seek-bar" value="0" style="width:160px">
+		<button type="button" id="mute">Mute</button>
+		<input type="range" id="volume-bar" min="0" max="1" step="0.1" value="1" style="width:160px">
+		<button type="button" id="full-screen">Full-Screen</button>
+		<button type="button" id="next-video">>></button>
+	  </div>
+	<br/>
+	<br/>
+	<div id="content"></div>
+	
+</body>
+

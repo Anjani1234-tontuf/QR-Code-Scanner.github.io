@@ -1,0 +1,63 @@
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Random Letter Sequence Generator</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+	
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-xs-3"></div>
+			<div class="col-xs-6">
+					<p class="chgFont1 marginBottom0">Random Letter <br>Sequence Generator</p>
+			</div>
+			<div class="col-xs-3"></div>
+		</div>
+		<div class="row">
+			<div class="col-xs-2"></div>
+			<div class="col-xs-5">
+					<div class="panel panel-primary">
+  						<div class="panel-heading">
+    						<h3 class="panel-title chgFont2">Specification</h3>
+  						</div>
+  						<div class="panel-body">
+								<span class="marginBottom1 chgFont4">Enter Letters:</span>
+								<input type="text" class="chgLength1 moveRight1 marginBottom2" maxlength="50" id="string1" value=""><br>
+								<span class="marginBottom1 chgFont">Enter Length:</span>
+								<input type="text" class="chgLength2 moveRight1 marginBottom2" id="length1"><br>
+								<span class="marginBottom1chgFont4">Enter Quantity:</span>
+								<input type="text" class="chgLength2 marginBottom2" id="quantity1">
+								<button type="button" class="btn btn-inverse moveRight2 chgFont3" id="btnLetter">SUBMIT</button>
+  						</div>
+					</div>
+			</div>
+			<div class="col-xs-1"></div>
+			<div class="col-xs-2">
+					<div class="panel panel-primary">
+  						<div class="panel-heading">
+    						<h3 class="panel-title chgFont2 centerText">Results</h3>
+  						</div>
+  						<div class="panel-body padding1 chgFont4" id="results1">
+  						</div>
+					</div>
+			</div>
+			<div class="col-xs-2"></div>
+		</div>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="app.js"></script>
+
+</body>
+
+</html>
