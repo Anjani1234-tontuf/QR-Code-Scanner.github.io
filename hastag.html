@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Hashtag Generator</title>
+</head>
+<body>
+	<fieldset>
+		<legend>Input</legend>
+		<input id="inputUI" type="text" placeholder="max: 140 characters">
+		<button id="generateBtn">generate</button>
+	</fieldset>
+	<fieldset id="resultUI">
+		<legend>Result</legend>
+	</fieldset>
+	<small id="infoUI"></small>
+
+	<script type="text/javascript">
+		// html elements
+		var inputUI = document.getElementById('inputUI');
+		var generateBtn = document.getElementById('generateBtn');
+		var resultUI = document.getElementById('resultUI');
+		var infoUI = document.getElementById('infoUI');
+
+		// add listener to return key as a submit trigger
+		inputUI.addEventListener('keyup', function(e){
+			if(e.keyCode === 13){
+				generateBtn.click();
+			}
+		})
+
+		// submit inputed words
+		generateBtn.addEventListener('click', function(){
+			var val = inputUI.value;
+
+			// validate input
+			validate(val, function(res){
+				if(res){
+					// capitalize
+					var splited = val.split(' ');
+					var capitalized = capitalize(splited);
+
+					// render to html
+					render('#' + capitalized.join(''));
+				}else{
+					alert('not valid');
+				}
+			})
+		})
+
+		function validate(val, callback){
+			if(val.trim() === '' || val.length > 140){
+				callback(false);
+			}else{
+				callback(true);
+			}
+		}
+
+		function capitalize(arr){
+			for (var i = 0; i < arr.length; i++) {
+				// split word
+				var newArr = arr[i].split('');
+
+				// change first letter to upper case
+				var f = newArr[0].toUpperCase();
+				
+				// replace first letter
+				newArr.shift();
+				newArr.unshift(f);
+
+				// join word
+				arr[i] = newArr.join('');
+			}
+
+			return arr;
+		}
+
+		function render(val){
+			// create result container
+			var textarea = document.createElement('textarea');
+			textarea.value = val;
+			resultUI.appendChild(textarea);
+
+			// create copy button
+			var div = document.createElement('div');
+			var button = document.createElement('button');
+			button.innerHTML = 'copy';
+			button.onclick = function(){
+				copy(textarea);
+			}
+			div.appendChild(button);
+
+			// append to result UI
+			resultUI.appendChild(div);
+		}
+
+		function copy(el){
+			// select element
+			el.select();
+
+			// copy
+			document.execCommand('copy');
+
+			// inform to user
+			infoUI.innerHTML = 'Copied to clipboard';
+
+			// reset
+			setTimeout(function(){
+				infoUI.innerHTML = '';
+			}, 1000);
+		}
+	</script>
+</body>
+</html>
